@@ -27,5 +27,16 @@ embassy = ["esp-idf-svc/embassy-sync", "esp-idf-svc/critical-section", "esp-idf-
 log = { version = "0.4", default-features = false }
 esp-idf-svc = { version = "0.47.3", default-features = false }
 
+combine = "4.6"
+libc = "0.2"
+time = "0.2"
+byteorder = "1.2"
+
 [build-dependencies]
+
 embuild = "0.31.3"
+elf = "0.0.10"
+json = "0.11"
+hex = "0.4.3"
+
+
