@@ -1,6 +1,14 @@
-use rbpf::{EbpfVmNoData, EbpfVmMbuff};
+use esp_idf_svc::{
+    hal::{gpio::AnyIOPin, peripherals::Peripherals, units::Hertz},
+    sys::sleep,
+};
+use rbpf::{EbpfVmMbuff, EbpfVmNoData};
+use std::fmt::Write;
 
 extern crate rbpf;
+
+// Task 1: support loading arbitary ebpf code that doesn't take any packet
+// data as input.
 
 fn test_ebpf_vm_no_data() {
     // This is the eBPF program, in the form of bytecode instructions.
@@ -57,7 +65,31 @@ fn main() {
     // Bind the log crate to the ESP Logging facilities
     esp_idf_svc::log::EspLogger::initialize_default();
 
-    log::info!("Hello, world!");
-    test_ebpf_vm_no_data();
-    test_ebpf_vm_buff();
+    let peripherals = Peripherals::take().unwrap();
+    let pins = peripherals.pins;
+
+    let config = esp_idf_svc::hal::uart::config::Config::default().baudrate(Hertz(115_200));
+
+    let mut uart: esp_idf_svc::hal::uart::UartDriver = esp_idf_svc::hal::uart::UartDriver::new(
+        peripherals.uart1,
+        pins.gpio1,
+        pins.gpio3,
+        Option::<AnyIOPin>::None,
+        Option::<AnyIOPin>::None,
+        &config,
+    )
+    .unwrap();
+
+    loop {
+        for i in 0..10 {
+            writeln!(uart, "{:}", format!("count {:}", i)).unwrap();
+        }
+
+        log::info!("Hello, world!");
+        test_ebpf_vm_no_data();
+        test_ebpf_vm_buff();
+        unsafe {
+            sleep(1000);
+        }
+    }
 }
