@@ -1,6 +1,6 @@
-mod rbpf;
+use rbpf::{EbpfVmNoData, EbpfVmMbuff};
 
-use crate::rbpf::lib::{EbpfVmMbuff, EbpfVmNoData};
+extern crate rbpf;
 
 fn test_ebpf_vm_no_data() {
     // This is the eBPF program, in the form of bytecode instructions.

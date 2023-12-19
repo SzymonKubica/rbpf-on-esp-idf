@@ -26,6 +26,7 @@ embassy = ["esp-idf-svc/embassy-sync", "esp-idf-svc/critical-section", "esp-idf-
 [dependencies]
 log = { version = "0.4", default-features = false }
 esp-idf-svc = { version = "0.47.3", default-features = false }
+rbpf = { path = "lib/rbpf-for-microcontrollers" }
 
 combine = "4.6"
 libc = "0.2"
